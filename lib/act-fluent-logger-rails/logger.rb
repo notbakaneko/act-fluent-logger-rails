@@ -63,11 +63,13 @@ module ActFluentLoggerRails
       }.stringify_keys
     end
 
+    # override to flush before tag gets popped
     def tagged(*tags)
-      @tags = tags.flatten
+      new_tags = push_tags(*tags)
       yield self
     ensure
       flush
+      pop_tags(new_tags.size)
     end
   end
 
