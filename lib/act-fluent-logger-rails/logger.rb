@@ -46,7 +46,7 @@ module ActFluentLoggerRails
 
       level = SEV_LABEL.index(Rails.application.config.log_level.to_s.upcase)
       logger = ActFluentLoggerRails::FluentLogger.new(settings, level, log_tags)
-      logger = ActiveSupport::TaggedLogging.new(logger)
+      logger.extend ActiveSupport::TaggedLogging::Formatter
       logger.extend self
     end
 
