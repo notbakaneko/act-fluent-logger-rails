@@ -138,16 +138,19 @@ module ActFluentLoggerRails
                  end
       @map[:messages] = messages
       @map[@severity_key] = format_severity(@severity)
-      if @tags
-        @log_tags.keys.zip(@tags).each do |k, v|
+      if current_tags
+        @log_tags.keys.zip(current_tags).each do |k, v|
           @map[k] = v
         end
       end
+
+      # shovel remaining tags from Rails.logger.tagged
+      @map[:tagged] = current_tags[@log_tags.size..-1]
       @fluent_logger.post(@tag, @map)
       @severity = 0
       @messages.clear
-      @tags = nil
       @map.clear
+      clear_tags!
     end
 
     def close
