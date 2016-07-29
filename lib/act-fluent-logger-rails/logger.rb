@@ -65,6 +65,7 @@ module ActFluentLoggerRails
 
     # override to flush before tag gets popped
     def tagged(*tags)
+      flush
       new_tags = push_tags(*tags)
       yield self
     ensure
@@ -131,26 +132,22 @@ module ActFluentLoggerRails
 
     def flush
       return if @messages.empty?
-      messages = if @messages_type == :string
-                   @messages.join("\n")
-                 else
-                   @messages
-                 end
-      @map[:messages] = messages
-      @map[@severity_key] = format_severity(@severity)
-      if current_tags
-        @log_tags.keys.zip(current_tags).each do |k, v|
-          @map[k] = v
+      @messages.each do |message|
+        @map[:messages] = message
+        @map[@severity_key] = format_severity(@severity)
+        if current_tags
+          @log_tags.keys.zip(current_tags).each do |k, v|
+            @map[k] = v
+          end
         end
-      end
 
-      # shovel remaining tags from Rails.logger.tagged
-      @map[:tagged] = current_tags[@log_tags.size..-1]
-      @fluent_logger.post(@tag, @map)
+        # shovel remaining tags from Rails.logger.tagged
+        @map[:tagged] = current_tags[@log_tags.size..-1]
+        @fluent_logger.post(@tag, @map)
+        @map.clear
+      end
       @severity = 0
       @messages.clear
-      @map.clear
-      clear_tags!
     end
 
     def close
