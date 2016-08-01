@@ -142,7 +142,8 @@ module ActFluentLoggerRails
         end
 
         # shovel remaining tags from Rails.logger.tagged
-        @map[:tagged] = current_tags[@log_tags.size..-1]
+        tags = current_tags[@log_tags.size..-1]
+        @map[:tagged] = tags if tags && !tags.empty?
         @fluent_logger.post(@tag, @map)
         @map.clear
       end
