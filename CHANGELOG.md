@@ -1,3 +1,7 @@
+## 0.4.0 / April 29 2017
+
+* Rails 5.1
+
 ## 0.3.1 / August 18 2016
 
 * Replace dependency from rails to railties and activesupport.
@@ -8,7 +12,7 @@
 
 ## 0.2.0 / Mar 20 2016
 
-* Add severity_key parameter. Is is The key of severity(DEBUG, INFO, WARN, ERROR).
+* Add severity_key parameter. It is The key of severity(DEBUG, INFO, WARN, ERROR).
 
 ## 0.1.10 / Dec 23 2015
 
